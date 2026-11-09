@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Entdecke die Sonne und die acht Planeten unseres Sonnensystems und teste dein Wissen im Quiz.">
+    <title>Unser Sonnensystem – Eine Reise durchs All</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #080d1b;
+        color: #f3f5ff;
+        --muted: #b7c0dc;
+        --panel: #111a30;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        line-height: 1.6;
+        background: radial-gradient(ellipse at 50% -10%, #273764 0, transparent 48rem), #080d1b;
+      }
+
+      .container { width: min(100% - 2rem, 1100px); margin-inline: auto; }
+      a { color: #a9c7ff; }
+
+      .skip-link {
+        position: absolute;
+        top: -5rem;
+        left: 1rem;
+        z-index: 1;
+        padding: .7rem 1rem;
+        border-radius: .5rem;
+        color: #08101f;
+        background: #d7e5ff;
+      }
+      .skip-link:focus { top: 1rem; }
+
+      header { padding: 5rem 0 3.5rem; text-align: center; }
+      .eyebrow {
+        color: #b9c9f5;
+        font-size: .82rem;
+        font-weight: 700;
+        letter-spacing: .16em;
+        text-transform: uppercase;
+      }
+      h1 {
+        max-width: 800px;
+        margin: .7rem auto 1rem;
+        font-size: clamp(2.4rem, 7vw, 5rem);
+        line-height: 1.05;
+        letter-spacing: -.04em;
+      }
+      header p { max-width: 650px; margin: auto; color: var(--muted); font-size: 1.15rem; }
+
+      .orbit {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(.45rem, 2vw, 1.2rem);
+        min-height: 150px;
+        margin: 2rem auto 0;
+        overflow: hidden;
+      }
+      .world {
+        flex: 0 0 auto;
+        width: clamp(13px, 3vw, 28px);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: var(--world-color);
+        box-shadow: 0 0 18px color-mix(in srgb, var(--world-color), transparent 35%);
+      }
+      .world.sun {
+        width: clamp(55px, 12vw, 110px);
+        background: radial-gradient(circle at 35% 35%, #fff5b4, #ffbf52 55%, #ef7040);
+        box-shadow: 0 0 60px #ffae4566;
+      }
+      .world.mercury { --world-color: #9da2ad; width: clamp(12px, 2vw, 18px); }
+      .world.venus { --world-color: #e4b979; width: clamp(20px, 3vw, 32px); }
+      .world.earth { --world-color: #4a9eff; width: clamp(21px, 3.2vw, 35px); }
+      .world.mars { --world-color: #d87152; width: clamp(16px, 2.7vw, 27px); }
+      .world.jupiter { --world-color: #d8a678; width: clamp(43px, 7vw, 72px); }
+      .world.saturn { --world-color: #e6d39b; position: relative; width: clamp(37px, 6vw, 62px); }
+      .world.saturn::after {
+        position: absolute;
+        inset: 34% -35%;
+        border: 3px solid #e8d8a8;
+        border-radius: 50%;
+        content: "";
+        transform: rotate(-18deg);
+      }
+      .world.uranus { --world-color: #8bd5d3; width: clamp(27px, 4vw, 42px); }
+      .world.neptune { --world-color: #5273e8; width: clamp(26px, 4vw, 40px); }
+
+      main { padding-bottom: 5rem; }
+      .section-heading { margin-bottom: 1.4rem; }
+      .section-heading h2 {
+        margin: 0;
+        font-size: clamp(1.7rem, 4vw, 2.4rem);
+        letter-spacing: -.025em;
+      }
+      .section-heading p { margin: .3rem 0 0; color: var(--muted); }
+      .planet-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 235px), 1fr));
+        gap: 1rem;
+      }
+      .planet-card {
+        min-height: 190px;
+        padding: 1.25rem;
+        border: 1px solid #ffffff17;
+        border-radius: 1rem;
+        background: linear-gradient(145deg, #18223b, var(--panel));
+      }
+      .planet-card h3 { margin: 0 0 .45rem; font-size: 1.2rem; }
+      .planet-card p { margin: 0; color: var(--muted); }
+      .planet-number {
+        display: inline-block;
+        margin-left: .35rem;
+        color: #aab8d9;
+        font-size: .78rem;
+        font-weight: 600;
+        vertical-align: middle;
+      }
+
+      .quiz {
+        margin-top: 4rem;
+        padding: clamp(1.25rem, 4vw, 2.5rem);
+        border: 1px solid #ffffff20;
+        border-radius: 1.25rem;
+        background: linear-gradient(145deg, #172440, #10182b);
+      }
+      .quiz form { margin-top: 1.5rem; }
+      fieldset {
+        margin: 0 0 1rem;
+        padding: 1rem 1.2rem;
+        border: 1px solid #ffffff22;
+        border-radius: .8rem;
+      }
+      legend { padding-inline: .35rem; font-weight: 700; }
+      .choice {
+        display: flex;
+        align-items: flex-start;
+        gap: .65rem;
+        padding: .35rem 0;
+        color: var(--muted);
+        cursor: pointer;
+      }
+      input[type="radio"] { margin-top: .35rem; accent-color: #94b9ff; }
+      .feedback { margin: .5rem 0 0; font-size: .92rem; }
+      .feedback:empty { display: none; }
+      .feedback[data-state="correct"] { color: #98e3b2; }
+      .feedback[data-state="incorrect"] { color: #ffb1a6; }
+      button {
+        padding: .8rem 1.2rem;
+        border: 0;
+        border-radius: .65rem;
+        color: #0b1425;
+        background: #b9d1ff;
+        font: inherit;
+        font-weight: 750;
+        cursor: pointer;
+      }
+      button:hover { background: #d0e0ff; }
+      button:focus-visible, input:focus-visible, a:focus-visible {
+        outline: 3px solid #f5cf7a;
+        outline-offset: 3px;
+      }
+      #quiz-result { min-height: 1.6em; margin: 1rem 0 0; font-weight: 700; }
+      footer { padding: 1.5rem 0 2rem; color: var(--muted); text-align: center; }
+
+      @media (max-width: 560px) {
+        header { padding-top: 3.5rem; }
+        .orbit { justify-content: flex-start; }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .world.sun { animation: glow 4s ease-in-out infinite alternate; }
+        @keyframes glow { to { box-shadow: 0 0 75px #ffae4588; } }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#inhalt">Zum Inhalt springen</a>
+    <header>
+      <div class="container">
+        <p class="eyebrow">Eine kleine Reise durchs All</p>
+        <h1>Unser Sonnensystem</h1>
+        <p>Eine Sonne, acht Planeten und unendlich viel zu entdecken. Lerne unsere kosmische Nachbarschaft kennen!</p>
+        <div class="orbit" role="img" aria-label="Die Sonne und die acht Planeten in ihrer Reihenfolge">
+          <span class="world sun"></span>
+          <span class="world mercury"></span>
+          <span class="world venus"></span>
+          <span class="world earth"></span>
+          <span class="world mars"></span>
+          <span class="world jupiter"></span>
+          <span class="world saturn"></span>
+          <span class="world uranus"></span>
+          <span class="world neptune"></span>
+        </div>
+      </div>
+    </header>
+
+    <main id="inhalt" class="container">
+      <section aria-labelledby="wissen">
+        <div class="section-heading">
+          <h2 id="wissen">Wer gehört dazu?</h2>
+          <p>Die Planeten kreisen um die Sonne. Von innen nach außen sind es:</p>
+        </div>
+        <div class="planet-grid">
+          <article class="planet-card">
+            <h3>☀️ Die Sonne</h3>
+            <p>Sie ist ein Stern und der Mittelpunkt unseres Sonnensystems. Ihr Licht und ihre Wärme machen Leben auf der Erde möglich.</p>
+          </article>
+          <article class="planet-card">
+            <h3>Merkur <span class="planet-number">1. Planet</span></h3>
+            <p>Merkur ist der kleinste Planet und der Sonne am nächsten. Auf seiner Oberfläche gibt es viele Krater.</p>
+          </article>
+          <article class="planet-card">
+            <h3>Venus <span class="planet-number">2. Planet</span></h3>
+            <p>Venus ist fast so groß wie die Erde. Ihre dichte Atmosphäre macht sie zum heißesten Planeten.</p>
+          </article>
+          <article class="planet-card">
+            <h3>Erde <span class="planet-number">3. Planet</span></h3>
+            <p>Unser Zuhause ist bisher der einzige bekannte Planet mit Leben. Viel Wasser bedeckt seine Oberfläche.</p>
+          </article>
+          <article class="planet-card">
+            <h3>Mars <span class="planet-number">4. Planet</span></h3>
+            <p>Wegen seines rötlichen Bodens heißt Mars auch „der rote Planet“. Forschende suchen dort nach Spuren von früherem Wasser.</p>
+          </article>
+          <article class="planet-card">
+            <h3>Jupiter <span class="planet-number">5. Planet</span></h3>
+            <p>Jupiter ist der größte Planet. Ein riesiger Wirbelsturm, der Große Rote Fleck, tobt dort schon seit langer Zeit.</p>
+          </article>
+          <article class="planet-card">
+            <h3>Saturn <span class="planet-number">6. Planet</span></h3>
+            <p>Saturn ist berühmt für seine großen Ringe. Sie bestehen aus vielen kleinen Eis- und Gesteinsstücken.</p>
+          </article>
+          <article class="planet-card">
+            <h3>Uranus <span class="planet-number">7. Planet</span></h3>
+            <p>Uranus sieht bläulich aus und ist sehr kalt. Er dreht sich fast auf der Seite um die Sonne.</p>
+          </article>
+          <article class="planet-card">
+            <h3>Neptun <span class="planet-number">8. Planet</span></h3>
+            <p>Neptun ist der äußerste Planet. Auf ihm wehen besonders starke Winde.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="quiz" aria-labelledby="quiz-title">
+        <div class="section-heading">
+          <h2 id="quiz-title">Das Sonnensystem-Quiz</h2>
+          <p>Wähle bei jeder Frage eine Antwort aus und prüfe dein Wissen.</p>
+        </div>
+        <form id="quiz-form">
+          <fieldset data-answer="b" data-explanation="Die Erde ist der dritte Planet von der Sonne aus.">
+            <legend>1. An welcher Stelle steht die Erde, von der Sonne aus gezählt?</legend>
+            <label class="choice"><input type="radio" name="q1" value="a"> An erster Stelle</label>
+            <label class="choice"><input type="radio" name="q1" value="b"> An dritter Stelle</label>
+            <label class="choice"><input type="radio" name="q1" value="c"> An fünfter Stelle</label>
+            <p class="feedback" aria-live="polite"></p>
+          </fieldset>
+          <fieldset data-answer="a" data-explanation="Jupiter ist der größte Planet unseres Sonnensystems.">
+            <legend>2. Welcher Planet ist der größte?</legend>
+            <label class="choice"><input type="radio" name="q2" value="a"> Jupiter</label>
+            <label class="choice"><input type="radio" name="q2" value="b"> Mars</label>
+            <label class="choice"><input type="radio" name="q2" value="c"> Merkur</label>
+            <p class="feedback" aria-live="polite"></p>
+          </fieldset>
+          <fieldset data-answer="c" data-explanation="Saturn ist besonders bekannt für seine großen Ringe aus Eis- und Gesteinsstücken.">
+            <legend>3. Welcher Planet ist für seine Ringe bekannt?</legend>
+            <label class="choice"><input type="radio" name="q3" value="a"> Venus</label>
+            <label class="choice"><input type="radio" name="q3" value="b"> Neptun</label>
+            <label class="choice"><input type="radio" name="q3" value="c"> Saturn</label>
+            <p class="feedback" aria-live="polite"></p>
+          </fieldset>
+          <fieldset data-answer="b" data-explanation="Die Sonne ist ein Stern und versorgt die Erde mit Licht und Wärme.">
+            <legend>4. Was ist die Sonne?</legend>
+            <label class="choice"><input type="radio" name="q4" value="a"> Ein Planet</label>
+            <label class="choice"><input type="radio" name="q4" value="b"> Ein Stern</label>
+            <label class="choice"><input type="radio" name="q4" value="c"> Ein Mond</label>
+            <p class="feedback" aria-live="polite"></p>
+          </fieldset>
+          <button type="submit">Antworten prüfen</button>
+          <p id="quiz-result" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+    <footer><div class="container">Weiter staunen, fragen und entdecken. 🚀</div></footer>
+
+    <script>
+      const quizForm = document.querySelector("#quiz-form");
+      const quizResult = document.querySelector("#quiz-result");
+
+      quizForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const questions = [...quizForm.querySelectorAll("fieldset")];
+        let score = 0;
+        let unanswered = false;
+
+        questions.forEach((question) => {
+          const selected = question.querySelector("input:checked");
+          const feedback = question.querySelector(".feedback");
+
+          if (!selected) {
+            unanswered = true;
+            feedback.textContent = "Bitte wähle eine Antwort aus.";
+            feedback.dataset.state = "incorrect";
+          } else if (selected.value === question.dataset.answer) {
+            score += 1;
+            feedback.textContent = `Richtig! ${question.dataset.explanation}`;
+            feedback.dataset.state = "correct";
+          } else {
+            feedback.textContent = `Noch nicht ganz. ${question.dataset.explanation}`;
+            feedback.dataset.state = "incorrect";
+          }
+        });
+
+        if (unanswered) {
+          quizResult.textContent = "Beantworte noch alle Fragen, um dein Ergebnis zu sehen.";
+        } else {
+          quizResult.textContent = `Du hast ${score} von ${questions.length} Fragen richtig beantwortet. ${
+            score === questions.length ? "Super gemacht!" : "Lies die Erklärungen und versuche es noch einmal!"
+          }`;
+        }
+      });
+    </script>
+  </body>
+</html>
